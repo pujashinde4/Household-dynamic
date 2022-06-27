@@ -1,0 +1,81 @@
+//program-survey of village by using function pointer
+#include <stdio.h>
+#include<stdlib.h>
+int sum=0;
+int i;
+struct household
+{
+    int head_adharno;
+    int no_of_child;
+    int no_of_adult;
+    float income;
+};
+double display_avg_income(struct household *hptr,int n)
+{
+    
+  float avg;
+  for(i=0;i<n;i++)
+  {
+     sum = sum+hptr->income; 
+     hptr++;
+  }
+  avg=sum/n;
+  printf("\navegare income is:%f",avg);
+  return avg;
+}
+void adhar_above_avg_income(struct household *hptr, float avg,int n)
+{
+    
+printf("\nIdentification number of household having income above average income are:");
+    for(i=0;i<n;i++)
+    {
+        if(hptr->income>avg)
+        {
+            printf("\nidentification number is:%d",hptr->head_adharno);
+        }
+        hptr++;
+    }
+    
+}
+void per_below_avg_income(struct household *hptr,float avg,int n)
+{
+    float per,count=0;
+    for(i=0;i<n;i++)
+    {
+        if(hptr->income<avg)
+        {
+            count++;
+        }
+        hptr++;
+    }
+    per=(count/n)*100;
+    printf("\npercenatge of household that are below average income is:%f",per);
+}
+int main()
+{
+    int i,n;
+    float avg;
+    struct household *h;//array of structure
+    double (*ptr)(struct household*,int);
+    void (*ptr1)(struct household*,float,int);
+    printf("enter the value of n");
+    scanf("%d",&n);
+     h=(struct household*)calloc(n,sizeof(struct household));
+   // accepting 10 household details
+    for(i=0;i<n;i++)
+    {
+       printf("\nenter the details of household as head_adharno,no_of_child,no_of_adult,income respectively:"); 
+       scanf("%d",&(h+i)->head_adharno);
+       scanf("%d",&(h+i)->no_of_child);
+       scanf("%d",&(h+i)->no_of_adult);
+       scanf("%f",&(h+i)->income);
+    }
+    ptr=display_avg_income;
+    avg=ptr(h,n);
+    ptr1=adhar_above_avg_income;
+    ptr1(h,avg,n);
+    ptr1=per_below_avg_income;
+    ptr1(h,avg,n);
+    free(h);
+    return 0;
+}
